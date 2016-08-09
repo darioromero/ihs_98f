@@ -17,6 +17,6 @@ for line in inFileLines:
     match = re.search(pattern=pattern, string=line, flags=True)
     if (match):
         n += 1
-        #print(line)
+        print(line)
 
 print('Elapsed Time: {0} --- Lines read: {1}'.format(elapsed, n))
