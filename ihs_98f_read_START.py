@@ -9,28 +9,43 @@ inFile = '/Users/darioromero/Documents/IHS/Export - 298 Production TEXAS 1-4.98f
 start = time.clock()
 print('Start Time: {0}'.format(start))
 
-n = 0 # nr. of wells
+ntotal = 0 # nr. of wells
 multi = 0 # nr. of MULTI wells
+
+# prefix of the output file
+fprefix = input("Enter Prefix of the output file: ")
+
+# number of wells to write per file -- wllspf
+wellspf = int(input("Enter number of Wells per File: "))
+#wellspf = 2000
 
 for line in fileinput.input(inFile):
     match = re.search(pattern='^START_US_PROD', string=line, flags=True)
-    if (match):
-        n += 1
+    if match:
+        ntotal += 1
+    match = re.search(pattern='MULTI', string=line, flags=True)
+    if match:
+        multi += 1
 
-# number of wells to write per file -- wllspf
-#wllspf = int(input("Enter Proportion of Wells per File: "))
-wllspf = 2000
+print('Wells read: {0:0>8}, MultiWells: {1:0>8}'.format(ntotal, multi))
+
 # nr of files required
-nfiles = int(n / wllspf)
+nfiles = int((ntotal - multi) / wellspf) + 1
 # remaining nr of wells for the extra file
-lastwlls = n % wllspf
+lastwlls = (ntotal - multi) % wellspf
+
+print('Total Nr of Files: {0:0>6}'.format(nfiles))
+print('Nr of Files with {0} Wells: {1:0>6}'.format(wellspf, nfiles - 1))
+print('Nr of Wells on Last File: {0:0>6}'.format(lastwlls))
 
 cycle = False
-nfile = 0
+filenr = 0
 wellnr = 0
 
-while wellnr <= n: # instead change this ... loop by cycle
-    ff = open(name='salida.98f', mode='w')
+'''
+
+while wellnr <= ntotal: # ntotal includes multi wells -- these are not counted
+    ff = open(name='salida.98f', mode='w') # filename must be related to cycle and input filename
     for line in fileinput.input(inFile):
         match = re.search(pattern='^START_US_PROD', string=line, flags=True)
         if match:
@@ -40,26 +55,21 @@ while wellnr <= n: # instead change this ... loop by cycle
                 multi += 1 # is a multi well - discard it
                 break
             else:
-                cycle = True  # set new cycle START -- END on
+                cycle = True  # set new cycle on
         else:
             match = re.search(pattern='^END_US_PROD', string=line, flags=True)
             if match:
-                ff.write(line)
-                cycle = False # last well in the cycle; set cycle off
+                ff.write(line) # write line to close cycle
+                cycle = False # last record in the cycle; set cycle off
         if cycle:
             ff.write(line) # write line within cycle
 
 
+'''
 
-
-
-elpsd = time.clock() - start
+elapsd = time.clock() - start
 # Elapsed Time
-print('Elapsed Time: {0}:'.format(elpsd))
-
-# print results
-print('Nr of Files with {0} Wells: {1:0>4} + 1, -- Nr of Wells on Last File: {2:0>6}'.format(wllspf, nfiles, lastwlls))
-print('Wells read: {0:0>8}, MultiWells: {1:0>8}'.format(n, m))
+print('Elapsed Time: {0}:'.format(elapsd))
 
 
 
