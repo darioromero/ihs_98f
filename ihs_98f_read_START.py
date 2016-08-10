@@ -25,9 +25,9 @@ elpsd = time.clock() - start
 # Elapsed Time
 print('Elapsed Time: {0}:'.format(elpsd))
 
-# number of wells to write per file -- wpf
-wllspf = 2000
+# number of wells to write per file -- wllspf
 #wllspf = int(input("Enter Proportion of Wells per File: "))
+wllspf = 2000
 # nr of files required
 nfiles = int(n / wllspf)
 # remaining nr of wells for the extra file
