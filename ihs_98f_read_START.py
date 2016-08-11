@@ -64,7 +64,7 @@ for line in fileinput.input(inFile):
             cycle = False # last record in the cycle; set cycle off
     if cycle: # write other lines within cycle START -- END cycle
         fw.write(line) # write line within cycle
-    if wellnr > (filenr * wellspf):
+    if wellnr >= (filenr * wellspf):
         cfile = True
         filenr += 1
         fw.close()
