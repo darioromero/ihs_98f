@@ -34,38 +34,52 @@ nfiles = int((ntotal - multi) / wellspf) + 1
 # remaining nr of wells for the extra file
 lastwlls = (ntotal - multi) % wellspf
 
-print('Total Nr of Files: {0:0>6}'.format(nfiles))
+print('Total Nr of Files         : {0:0>6}'.format(nfiles))
 print('Nr of Files with {0} Wells: {1:0>6}'.format(wellspf, nfiles - 1))
-print('Nr of Wells on Last File: {0:0>6}'.format(lastwlls))
+print('Nr of Wells on Last File  : {0:0>6}'.format(lastwlls))
 
-cycle = False
-filenr = 0
+cycle = False # cycle indicating a new well loop START-STOP
+cfile = True # cycle indicating a new file to be written
+filenr = 1
+wellrc = 0 # well record read from input
 wellnr = 0
 
-'''
-
-while wellnr <= ntotal: # ntotal includes multi wells -- these are not counted
-    ff = open(name='salida.98f', mode='w') # filename must be related to cycle and input filename
+while wellrc <= ntotal: # total loop - ntotal includes multi wells
     for line in fileinput.input(inFile):
+        if cfile: # new file-cycle for writing well records
+            fwname = fprefix + '-' + '{:0>4}'.format(str(filenr)) + '.98f'
+            fw = open(fwname, 'w')
+            cfile = False
         match = re.search(pattern='^START_US_PROD', string=line, flags=True)
         if match:
-            wellnr += wellnr  # increment well
+            wellrc += 1  # increment well
             match = re.search(pattern='MULTI', string=line, flags=True)
             if match:
-                multi += 1 # is a multi well - discard it
+                # is a multi well - discard it
                 break
             else:
-                cycle = True  # set new cycle on
+                cycle = True  # set new cycle for non-multi well
+                cfile = True  # set new cycle for new file
+                fw.write(line) # write line - new cycle
+
         else:
             match = re.search(pattern='^END_US_PROD', string=line, flags=True)
             if match:
-                ff.write(line) # write line to close cycle
+                fw.write(line) # write line - current cycle
                 cycle = False # last record in the cycle; set cycle off
-        if cycle:
-            ff.write(line) # write line within cycle
+                wellrc += 1
+                wellnr += 1
+                if True:
+                    print(1)
+                else:
+                    print(0)
+        if cycle: # write other lines within cycle START -- END cycle
+            fw.write(line) # write line within cycle
+        if wellnr > (filenr * wellspf):
+                cfile = True
+                filenr += 1
 
 
-'''
 
 elapsd = time.clock() - start
 # Elapsed Time
