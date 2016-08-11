@@ -38,13 +38,12 @@ print('Total Nr of Files         : {0:0>6}'.format(nfiles))
 print('Nr of Files with {0} Wells: {1:0>6}'.format(wellspf, nfiles - 1))
 print('Nr of Wells on Last File  : {0:0>6}'.format(lastwlls))
 
-cycle = False # cycle indicating a new well loop START-STOP
-cfile = True # cycle indicating a new file to be written
-filenr = 1
-wellrc = 0 # well record read from input
-wellnr = 0
+cycle = False # cycle indicating a new START-END well loop
+cfile = True # cycle indicating a new file for a group of START-END wells
+filenr = 1 # indicates current file number out of nfiles
+wellnr = 0 # nr of wells writen to the file
 
-while wellrc <= ntotal: # total loop - ntotal includes multi wells
+while wellnr <= ntotal: # total loop - ntotal includes multi wells
     for line in fileinput.input(inFile):
         if cfile: # new file-cycle for writing well records
             fwname = fprefix + '-' + '{:0>4}'.format(str(filenr)) + '.98f'
@@ -52,7 +51,6 @@ while wellrc <= ntotal: # total loop - ntotal includes multi wells
             cfile = False
         match = re.search(pattern='^START_US_PROD', string=line, flags=True)
         if match:
-            wellrc += 1  # increment well
             match = re.search(pattern='MULTI', string=line, flags=True)
             if match:
                 # is a multi well - discard it
@@ -67,7 +65,6 @@ while wellrc <= ntotal: # total loop - ntotal includes multi wells
             if match:
                 fw.write(line) # write line - current cycle
                 cycle = False # last record in the cycle; set cycle off
-                wellrc += 1
                 wellnr += 1
                 if True:
                     print(1)
