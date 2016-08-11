@@ -57,26 +57,17 @@ while wellnr <= ntotal: # total loop - ntotal includes multi wells
                 break
             else:
                 cycle = True  # set new cycle for non-multi well
-                cfile = True  # set new cycle for new file
-                fw.write(line) # write line - new cycle
-
         else:
             match = re.search(pattern='^END_US_PROD', string=line, flags=True)
             if match:
                 fw.write(line) # write line - current cycle
                 cycle = False # last record in the cycle; set cycle off
                 wellnr += 1
-                if True:
-                    print(1)
-                else:
-                    print(0)
         if cycle: # write other lines within cycle START -- END cycle
             fw.write(line) # write line within cycle
         if wellnr > (filenr * wellspf):
                 cfile = True
                 filenr += 1
-
-
 
 elapsd = time.clock() - start
 # Elapsed Time
