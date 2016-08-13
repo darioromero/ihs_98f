@@ -3,9 +3,9 @@ import sys, re, time, fileinput
 #inFile = ""
 #inFile = input("Enter the input File Name: ")
 
-inFile = '/Users/darioromero/Google Drive/IHS/DataFiles/PERMIAN/' + 'PERMMIAN_BASIN_298_Production.98f'
+#inFile = '/Users/darioromero/Google Drive/IHS/DataFiles/PERMIAN/' + 'PERMMIAN_BASIN_298_Production.98f'
 #inFile = '/Users/darioromero/Documents/IHS/Export - 298 Production TEXAS 1-4.98f'
-#inFile = 'TEST_FILE.98f'
+inFile = 'TEST_FILE.98f'
 
 ntotal = 0 # nr. of wells
 multi = 0 # nr. of MULTI wells
