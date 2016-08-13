@@ -47,7 +47,7 @@ for line in fileinput.input(inFile):
     if cfile: # new file-cycle for writing well records
         fwname = fprefix + '-' + '{:0>4}'.format(str(filenr)) + '.98f'
         fw = open(fwname, 'w')
-        fw.write('IHS Inc.            US PRODUCTION DATA  298         1.1 FIXED  XXXX/XX/XXXXXXXX\n')
+        fw.write('IHS Inc.            US PRODUCTION DATA  298         1.1 FIXED  2014/08/20310448\n')
         cfile = False
         print('Writing on file {0}'.format(fwname))
     match = re.search(pattern='^START_US_PROD', string=line, flags=True)
