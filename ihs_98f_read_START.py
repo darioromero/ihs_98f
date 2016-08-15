@@ -5,7 +5,12 @@ import sys, re, time, fileinput
 
 #inFile = '/Users/darioromero/Google Drive/IHS/DataFiles/PERMIAN/' + 'PERMMIAN_BASIN_298_Production.98f'
 #inFile = '/Users/darioromero/Documents/IHS/Export - 298 Production TEXAS 1-4.98f'
-inFile = 'TEST_FILE.98f'
+#inFile = 'TEST_FILE.98f'
+
+folder = '/home/drome/darioromero/ihs_98f'
+inFile = 'PERMIAN_BASIN_298_Production.98f'
+
+inFile = folder + '/' + inFile
 
 ntotal = 0 # nr. of wells
 multi = 0 # nr. of MULTI wells
@@ -13,7 +18,7 @@ multi = 0 # nr. of MULTI wells
 # prefix of the output file
 fprefix = input("Enter Prefix of the output file: ")
 
-# number of wells to write per file -- wllspf
+# number of wells to write per file -- wellspf
 wellspf = int(input("Enter number of Wells per File: "))
 #wellspf = 2000
 
@@ -47,7 +52,7 @@ for line in fileinput.input(inFile):
     if cfile: # new file-cycle for writing well records
         fwname = fprefix + '-' + '{:0>4}'.format(str(filenr)) + '.98f'
         fw = open(fwname, 'w')
-        fw.write('IHS Inc.            US PRODUCTION DATA  298         1.1 FIXED  2014/08/20310448\n')
+        fw.write('IHS Inc.            US PRODUCTION DATA  298         1.1 FIXED  2014/08/20310448\r\n')
         cfile = False
         print('Writing on file {0}'.format(fwname))
     match = re.search(pattern='^START_US_PROD', string=line, flags=True)
@@ -59,11 +64,11 @@ for line in fileinput.input(inFile):
     if match:
         match = re.search(pattern='MULTI', string=line, flags=True)
         if not match:
-            fw.write(line) # write line - current cycle
+            fw.write(line + '\r\n') # write line - current cycle
             wellnr += 1
             cycle = False # last record in the cycle; set cycle off
     if cycle: # write other lines within cycle START -- END cycle
-        fw.write(line) # write line within cycle
+        fw.write(line + '\r\n') # write line within cycle
     if wellnr >= (filenr * wellspf):
         cfile = True
         filenr += 1
