@@ -55,20 +55,20 @@ for line in fileinput.input(inFile):
         fw.write('IHS Inc.            US PRODUCTION DATA  298         1.1 FIXED  2014/08/20310448\r\n')
         cfile = False
         print('Writing on file {0}'.format(fwname))
-    match = re.search(pattern='^START_US_PROD', string=line, flags=True)
+    match = re.search(pattern='^START_US_PROD', string=line)
     if match:
-        match = re.search(pattern='MULTI', string=line, flags=True)
+        match = re.search(pattern='MULTI', string=line)
         if not match:
             cycle = True  # set new cycle for non-multi well
-    match = re.search(pattern='^END_US_PROD', string=line, flags=True)
+    match = re.search(pattern='^END_US_PROD', string=line)
     if match:
-        match = re.search(pattern='MULTI', string=line, flags=True)
+        match = re.search(pattern='MULTI', string=line)
         if not match:
-            fw.write(line + '\r\n') # write line - current cycle
+            fw.write(line.rstrip('\n') + '\r\n') # write line - current cycle
             wellnr += 1
             cycle = False # last record in the cycle; set cycle off
     if cycle: # write other lines within cycle START -- END cycle
-        fw.write(line + '\r\n') # write line within cycle
+        fw.write(line.rstrip('\n') + '\r\n') # write line within cycle
     if wellnr >= (filenr * wellspf):
         cfile = True
         filenr += 1
