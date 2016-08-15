@@ -49,6 +49,7 @@ wells_per_county = {'CRANE': 0, 'CROCKETT': 0, 'PECOS': 0, 'REAGAN': 0,
 pattern = '^(\+A\s)([A-Z]|[0-9]){13}(CRANE\s{3}|CROCKETT|PECOS\s{3}|REAGAN\s{2}|' \
           'TERRELL\s{1}|UPTON\s{3})'
 
+
 mtotal = 0
 
 for line in fileinput.input(inFile):
