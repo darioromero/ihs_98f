@@ -54,12 +54,12 @@ mtotal = 0
 for line in fileinput.input(inFile):
     match = re.search(pattern=pattern, string=line)
     if match:
-        mtotal += 1
         '''
+        mtotal += 1
         print(str(mtotal) + ' - ' + line.rstrip("\n") + ' -- [' +
               line[16:24] + ']')
         '''
-        wells_per_county[line[16:24].rstrip(' ')] += 1
+        wells_per_county[line[16:24].rstrip()] += 1
 
 
 print('Wells per County: {0}'.format(wells_per_county))
