@@ -70,6 +70,7 @@ for line in fileinput.input(inFile):
 '''
 
 rt = {
+    # Following two records will be saved on Header file
     1: ['START_US_PROD', [30], ['entityID'], [40]],
     2: ['^(\+\+\s)', [3], ['prodID'], [40]],
     3: ['^(\+A\s)', [3, 5, 7, 13,
@@ -105,20 +106,26 @@ rt = {
          'upperPerfDepth', 'lowerPerfDepth'],
         [9, 10, 9, 10, 6, 5, 5]
         ],
+    # Following two records will be saved on Test file
     8: ['^(\+E\s)', [3, 6, 11, 16, 23, 29, 34, 39, 43, 48, 55, 59, 64, 69, 71],
         ['testNR', 'uprPerfDepth', 'lwrPerfDepth', 'liqPerDay', 'gasPerDay',
          'watPerDay', 'chokeSize', 'basicSedWat', 'ftPress', 'goRatio', 'liqGravity',
          'finalSIPress', 'gasGravity', 'prodMethod', 'testDate'],
-        [9, 10, 9, 10, 6, 5, 5]
+        [3, 5, 5, 7, 6, 5, 5, 4, 5, 7, 4, 5, 5, 2, 8]
         ],
-    9: ['^(\+F\s)', [1, 2, 3, 4, 5, 6]],
-    10: ['^(\+G\s)', [1, 2, 3, 4, 5, 6]],
-    11: ['^(\+I\s)', [1, 2, 3, 4, 5, 6]],
-    12: ['^(\+J\s)', [1, 2, 3, 4, 5, 6]],
-    13: ['^(\+L\s)', [1, 2, 3, 4, 5, 6]],
-    14: ['^(\+G\s)', [1, 2, 3, 4, 5, 6]],
-    15: ['^(\+G\s)', [1, 2, 3, 4, 5, 6]]
+    9: ['^(\+E\!)', [3, 6, 10, 15, 21, 28, 43],
+        ['testNR', 'bhp_Z', 'zFactor', 'nFactor', 'aopCalc',
+         'cumGas', 'clPressure'],
+        [3, 4, 5, 6, 7, 15, 5]
+        ],
+# Following two records will be saved on Production file
+    10: ['^(\+G\s)', [3, 11, 26, 41, 56, 71, 76],
+        ['prodDate', 'liqProd', 'gasProd', 'watProd', 'allowProd',
+         'numWells', 'daysProd'],
+        [8, 15, 15, 15, 15, 5, 2]
+        ]
 }
+
 match = re.search(pattern=rt.get(2)[0], string=line)
 line = '++ THIS IS THE START OF A RECORD TYPE 2'
 
