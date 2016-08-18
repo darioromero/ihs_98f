@@ -62,7 +62,6 @@ for line in fileinput.input(inFile):
         '''
         wells_per_county[line[16:24].rstrip()] += 1
 
-
 print('Wells per County: {0}'.format(wells_per_county))
 
 fileinput.close()
