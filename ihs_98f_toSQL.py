@@ -17,9 +17,6 @@ record_type = {'START_US_PROD\s': [3, ],
 pattern = '^(\+A\s)([A-Z]|[0-9]){13}(CRANE\s{3}|CROCKETT|PECOS\s{3}|REAGAN\s{2}|' \
           'TERRELL\s{1}|UPTON\s{3})'
 
-
-
-
 # regex for searching for specific counties as listed below
 # ^(\+A\s)([A-Z]|[0-9]){13}(CRANE\s{3}|CROCKETT|PECOS\s{3}|REAGAN\s{2}|
 #                           TERRELL\s{1}|UPTON\s{3})
@@ -94,9 +91,26 @@ rt = {
     5: ['^(\+B\s)', [3, 39],
         ['leaseNM', 'operNM'], [36, 36]
         ],
-    6: ['^(\+D\s)', [1, 2, 3, 4, 5, 6]],
-    7: ['^(\+D\!)', [1, 2, 3, 4, 5, 6]],
-    8: ['^(\+E\s)', [1, 2, 3, 4, 5, 6]],
+    6: ['^(\+C\s)', [3, 59],
+        ['fieldNM', 'rsrvrNM'], [40, 20]
+        ],
+    6: ['^(\+D\s)', [3, 18, 21, 30, 35, 45, 55, 57, 58, 59, 64, 65, 70],
+        ['apiNR', 'mmsSufix', 'wellNR', 'totalWellDepth', 'bhPress', 'bhTemp',
+         'typeWell', 'dirDrillFlag', 'wellStat', 'michiganPermNR', 'bhCalc',
+         'tvDepth', 'wellSerialNR'],
+        [15, 3, 9, 5, 10, 10, 2, 1, 1, 5, 1, 5, 8]
+        ],
+    7: ['^(\+D\!)', [3, 12, 33, 43, 45, 51, 56],
+        ['surfLat', 'surfLon', 'bhLat', 'bhLon', 'plugDate',
+         'upperPerfDepth', 'lowerPerfDepth'],
+        [9, 10, 9, 10, 6, 5, 5]
+        ],
+    8: ['^(\+E\s)', [3, 6, 11, 16, 23, 29, 34, 39, 43, 48, 55, 59, 64, 69, 71],
+        ['testNR', 'uprPerfDepth', 'lwrPerfDepth', 'liqPerDay', 'gasPerDay',
+         'watPerDay', 'chokeSize', 'basicSedWat', 'ftPress', 'goRatio', 'liqGravity',
+         'finalSIPress', 'gasGravity', 'prodMethod', 'testDate'],
+        [9, 10, 9, 10, 6, 5, 5]
+        ],
     9: ['^(\+F\s)', [1, 2, 3, 4, 5, 6]],
     10: ['^(\+G\s)', [1, 2, 3, 4, 5, 6]],
     11: ['^(\+I\s)', [1, 2, 3, 4, 5, 6]],
