@@ -2,7 +2,6 @@ import sys, re, time, fileinput
 
 folder = '/home/drome/darioromero/ihs_98f'
 inFile = 'PERMIAN_BASIN_298_Production.98f'
-#inFile = 'PERMIAN_BASIN_298_Production_001TEST.98f'
 inFile = folder + '/' + inFile
 
 # regex pattern for searching for specific counties as listed below
@@ -120,22 +119,22 @@ for line in fileinput.input(inFile):
         match = re.search(pattern='MULTI', string=line)
         if match:
             new_well = False
-            break
+            continue
         hdrWell_toFile[0] = line[rt.get(1)[1][0]:(rt.get(1)[1][0] + rt.get(1)[3][0])].rstrip() # entityID
-        print(hdrWell_toFile + '\r\n')
+        #print(str(hdrWell_toFile) + '\r\n')
     elif new_well:
         match = re.search(pattern=rt.get(2)[0], string=line) # record ++
         if match:
             hdrWell_toFile[1] = line[rt.get(1)[1][0]:(rt.get(1)[1][0] + rt.get(1)[3][0])].rstrip() # prodID
-            print(hdrWell_toFile + '\r\n')
-            break
+            #print(str(hdrWell_toFile) + '\r\n')
+            continue
         match = re.search(pattern=rt.get(3)[0], string=line) # record +A
         if match:
             if line[rt.get(3)[1][4]:(rt.get(3)[1][4] + rt.get(3)[3][4])].rstrip() not in \
                     (list(wells_per_county.keys())):
                 new_well = False
                 hdrWell_toFile = hdrWell[:]
-                break
+                continue
             hdrWell_toFile[2]  = line[rt.get(3)[1][0]:(rt.get(3)[1][0] + rt.get(3)[3][0])].rstrip() # regionCD
             hdrWell_toFile[3]  = line[rt.get(3)[1][1]:(rt.get(3)[1][1] + rt.get(3)[3][1])].rstrip() # stateCD
             hdrWell_toFile[4]  = line[rt.get(3)[1][2]:(rt.get(3)[1][2] + rt.get(3)[3][2])].rstrip() # fieldCD
@@ -148,7 +147,7 @@ for line in fileinput.input(inFile):
             hdrWell_toFile[11] = line[rt.get(3)[1][9]:(rt.get(3)[1][9] + rt.get(3)[3][9])].rstrip() # basinCD
             hdrWell_toFile[12] = line[rt.get(3)[1][10]:(rt.get(3)[1][10] + rt.get(3)[3][10])].rstrip() # indCBM
             hdrWell_toFile[13] = line[rt.get(3)[1][11]:(rt.get(3)[1][11] + rt.get(3)[3][11])].rstrip() # enhrecFlg
-            break
+            continue
         match = re.search(pattern=rt.get(4)[0], string=line) # record +AR
         if match:
             hdrWell_toFile[14] = line[rt.get(4)[1][0]:(rt.get(4)[1][0] + rt.get(4)[3][0])].rstrip() # leaseCD
@@ -161,12 +160,12 @@ for line in fileinput.input(inFile):
         if match:
             hdrWell_toFile[20] = line[rt.get(5)[1][0]:(rt.get(5)[1][0] + rt.get(5)[3][0])].rstrip() # leaseNM
             hdrWell_toFile[21] = line[rt.get(5)[1][1]:(rt.get(5)[1][1] + rt.get(5)[3][1])].rstrip() # operNM
-            break
+            continue
         match = re.search(pattern=rt.get(6)[0], string=line)  # record +C
         if match:
             hdrWell_toFile[22] = line[rt.get(6)[1][0]:(rt.get(6)[1][0] + rt.get(6)[3][0])].rstrip() # fieldNM
             hdrWell_toFile[23] = line[rt.get(6)[1][1]:(rt.get(6)[1][1] + rt.get(6)[3][1])].rstrip() # resrvrNM
-            break
+            continue
         match = re.search(pattern=rt.get(7)[0], string=line)  # record +D
         if match:
             hdrWell_toFile[24] = line[rt.get(7)[1][0]:(rt.get(7)[1][0] + rt.get(7)[3][0])].rstrip()    # apiNR
@@ -182,7 +181,7 @@ for line in fileinput.input(inFile):
             hdrWell_toFile[34] = line[rt.get(7)[1][10]:(rt.get(7)[1][10] + rt.get(7)[3][10])].rstrip() # bhCalc
             hdrWell_toFile[35] = line[rt.get(7)[1][11]:(rt.get(7)[1][11] + rt.get(7)[3][11])].rstrip() # tvDepth
             hdrWell_toFile[36] = line[rt.get(7)[1][12]:(rt.get(7)[1][12] + rt.get(7)[3][12])].rstrip() # wellSerialNR
-            break
+            continue
         match = re.search(pattern=rt.get(8)[0], string=line)  # record +D!
         if match:
             hdrWell_toFile[37] = line[rt.get(8)[1][0]:(rt.get(8)[1][0] + rt.get(8)[3][0])].rstrip() # surfLat
@@ -192,14 +191,16 @@ for line in fileinput.input(inFile):
             hdrWell_toFile[41] = line[rt.get(8)[1][4]:(rt.get(8)[1][4] + rt.get(8)[3][4])].rstrip() # plugDate
             hdrWell_toFile[42] = line[rt.get(8)[1][5]:(rt.get(8)[1][5] + rt.get(8)[3][5])].rstrip() # upperPerfDepth
             hdrWell_toFile[43] = line[rt.get(8)[1][6]:(rt.get(8)[1][6] + rt.get(8)[3][6])].rstrip() # lowerPerfDepth
-            break
+            #print(str(hdrWell_toFile))
+            continue
     match = re.search(pattern=rt.get(12)[0], string=line)  # END_US_PROD
     if match:
         ''' do somenthing here '''
-        print(hdrWell_toFile + '\r\n')
-        outFile.write(hdrWell_toFile + '\r\n')
+        #print(str(hdrWell_toFile) + '\r\n')
+        outFile.write(str(hdrWell_toFile) + '\r\n')
+        print('Well in : [{0}]'.format(hdrWell_toFile[6]))
         new_well = False
-        hdrWell_toFile = None
+        hdrWell_toFile = hdrWell[:]
 
 fileinput.close()
 outFile.close()
