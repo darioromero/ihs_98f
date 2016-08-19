@@ -84,36 +84,30 @@ blnk = ' '
 new_well = False # no new well has been found
 
 # Header record to be written
-#          ----5----0----5----0----5----0----5----0
+# 'entityID', 'prodID',
 # 'regionCD', 'stateCD', 'fieldCD', 'countyCD', 'countyNM', 'operCD', 'productCD', 'modeCD',
 # 'formationCD', 'basinCD', 'indCBM', 'enhrecFlg'
+# 'leaseCD', 'serialNum', 'comingCD', 'resrvrCD', 'apiCD', 'districtCD'
+# 'leaseNM', 'operNM', 'fieldNM', 'resrvrNM',
+# 'apiNR', 'mmsSuffix', 'wellNR', 'totalWellDepth', 'bhPress', 'bhTemp', 'typeWell', 'dirDrillFlag',
+# 'wellStat', 'michiganPermNR', 'bhCalc', 'tvDepth', 'wellSerialNR'
+# 'surfLat', 'surfLon', 'bhLat', 'bhLon', 'plugDate', 'upperPerfDepth', 'lowerPerfDepth',
 #
-#
-#
-header = [40*blnk, # entityID
-          40*blnk, # prodID
-          '  ', # regionCD
-          '  ', # stateCD
-          '      ', # fieldCD
-          '   ', # countyCD
-          '        ', # countyNM
-          '        ', # operCD
-          ' ', # productCD
-          ' ', # modeCD
-          '        ', # formationCD
-          '   ', # basinCD
-          ' ', # indCBM
-          ' ', # enhrecFlg
-          # 'leaseCD', 'serialNum', 'comingCD', 'resrvrCD', 'apiCD', 'districtCD'
-          '          ', # leaseCD
-          '           ', # serialNum
-          '    ', # comingCD
-          '      ', # resrvrCD
-          '     ', # apiCD
-          '  ', # districtCD
-          '                                    ', # leaseNM
-          '', # operNM
-          ]
+hdrWell = [40*blnk, 40*blnk, 2*blnk, 2*blnk, 6*blnk, 3*blnk, 8*blnk, 8*blnk, 1*blnk, 1*blnk, 8*blnk,
+           3*blnk, 1*blnk, 1*blnk, 10*blnk, 11*blnk, 4*blnk, 6*blnk, 5*blnk, 2*blnk, 36*blnk, 36*blnk,
+           40*blnk, 20*blnk, 15*blnk, 3*blnk, 9*blnk, 5*blnk, 10*blnk, 10*blnk, 2*blnk, 1*blnk, 1*blnk,
+           5*blnk, 1*blnk, 5*blnk, 8*blnk, 9*blnk, 10*blnk, 9*blnk, 10*blnk, 6*blnk, 5*blnk, 5*blnk]
+
+# 'testNR', 'uprPerfDepth', 'lwrPerfDepth', 'liqPerDay', 'gasPerDay', 'watPerDay', 'chokeSize', 'basicSedWat',
+# 'ftPress', 'goRatio', 'liqGravity', 'finalSIPress', 'gasGravity', 'prodMethod', 'testDate'
+# 'testNR', 'bhp_Z', 'zFactor', 'nFactor', 'aopCalc', 'cumGas', 'clPressure'
+
+prodTest = [3*blnk, 5*blnk, 5*blnk, 7*blnk, 6*blnk, 5*blnk, 5*blnk, 4*blnk, 5*blnk, 7*blnk,
+        4*blnk, 5*blnk, 5*blnk, 2*blnk, 8*blnk, 3*blnk, 4*blnk, 5*blnk, 6*blnk, 7*blnk, 15*blnk, 5*blnk]
+
+# 'prodDate', 'liqProd', 'gasProd', 'watProd', 'allowProd', 'numWells', 'daysProd'
+
+prodMon = [8*blnk, 15*blnk, 15*blnk, 15*blnk, 15*blnk, 5*blnk, 2*blnk]
 
 for line in fileinput.input(inFile):
     match = re.search(pattern=rt.get(1)[0], string=line) # START_US_PROD
@@ -123,10 +117,37 @@ for line in fileinput.input(inFile):
         if match:
             new_well = False
             break
-        entityID = line[rt.get(1)[1][0]:(rt.get(1)[1][0] + rt.get(1)[3][0]+1).rstrip()]
-
+        entityID = line[rt.get(1)[1][0]:(rt.get(1)[1][0] + rt.get(1)[3][0])].rstrip()
     elif new_well:
-        match()
+        match = re.search(pattern=rt.get(2)[0], string=line) # record ++
+        if match:
+            prodID = line[rt.get(1)[1][0]:(rt.get(1)[1][0] + rt.get(1)[3][0])].rstrip()
+            break
+        match = re.search(pattern=rt.get(3)[0], string=line) # record +A
+        if match:
+            regionCD    = line[rt.get(3)[1][0]:(rt.get(3)[1][0] + rt.get(3)[3][0])].rstrip()
+            stateCD     = line[rt.get(3)[1][1]:(rt.get(3)[1][1] + rt.get(3)[3][1])].rstrip()
+            fieldCD     = line[rt.get(3)[1][2]:(rt.get(3)[1][2] + rt.get(3)[3][2])].rstrip()
+            countyCD    = line[rt.get(3)[1][3]:(rt.get(3)[1][3] + rt.get(3)[3][3])].rstrip()
+            countyNM    = line[rt.get(3)[1][4]:(rt.get(3)[1][4] + rt.get(3)[3][4])].rstrip()
+            operCD      = line[rt.get(3)[1][5]:(rt.get(3)[1][5] + rt.get(3)[3][5])].rstrip()
+            productCD   = line[rt.get(3)[1][6]:(rt.get(3)[1][6] + rt.get(3)[3][6])].rstrip()
+            modeCD      = line[rt.get(3)[1][7]:(rt.get(3)[1][7] + rt.get(3)[3][7])].rstrip()
+            formationCD = line[rt.get(3)[1][8]:(rt.get(3)[1][8] + rt.get(3)[3][8])].rstrip()
+            basinCD     = line[rt.get(3)[1][9]:(rt.get(3)[1][9] + rt.get(3)[3][9])].rstrip()
+            indCBM      = line[rt.get(3)[1][10]:(rt.get(3)[1][10] + rt.get(3)[3][10])].rstrip()
+            enhrecFlg   = line[rt.get(3)[1][11]:(rt.get(3)[1][11] + rt.get(3)[3][11])].rstrip()
+            break
+        match = re.search(pattern=rt.get(4)[0], string=line) # record +AR
+        if match:
+            leaseCD     = line[rt.get(4)[1][0]:(rt.get(4)[1][0] + rt.get(4)[3][0])].rstrip()
+            serialNum   = line[rt.get(4)[1][0]:(rt.get(4)[1][0] + rt.get(4)[3][0])].rstrip()
+            comingCD    = line[rt.get(4)[1][0]:(rt.get(4)[1][0] + rt.get(4)[3][0])].rstrip()
+            resrvrCD    = line[rt.get(4)[1][0]:(rt.get(4)[1][0] + rt.get(4)[3][0])].rstrip()
+            apiCD       = line[rt.get(4)[1][0]:(rt.get(4)[1][0] + rt.get(4)[3][0])].rstrip()
+            districtCD  = line[rt.get(4)[1][0]:(rt.get(4)[1][0] + rt.get(4)[3][0])].rstrip()
+            break
+
 
 
 fileinput.close()
