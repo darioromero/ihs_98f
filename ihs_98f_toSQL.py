@@ -192,26 +192,13 @@ for line in fileinput.input(inFile):
             continue
     match = re.search(pattern=rt.get(12)[0], string=line)  # END_US_PROD
     if match:
-        ''' do something here '''
         if new_well:
-            outFile.write(str(hdrWell_toFile) + '\r\n')
-            print('Well in : [{0}]'.format(hdrWell_toFile[6]), end='\r')
+            outFile.write(', '.join(hdrWell_toFile) + '\r\n')
+            print('Well in : [{0}]\r'.format(hdrWell_toFile[6])),
         new_well = False
         hdrWell_toFile = hdrWell[:]
 
 fileinput.close()
 outFile.close()
 
-'''
-mtotal = 0
-
-for line in fileinput.input(inFile):
-    match = re.search(pattern=county, string=line)
-    if match:
-        wells_per_county[line[16:24].rstrip()] += 1
-
-print('Wells per County: {0}'.format(wells_per_county))
-
-fileinput.close()
-'''
 
