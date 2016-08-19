@@ -77,8 +77,8 @@ rt = {
         ['prodDate', 'liqProd', 'gasProd', 'watProd', 'allowProd',
          'numWells', 'daysProd'],
         [8, 15, 15, 15, 15, 5, 2]
-        ]
-    12: ['^(END_US_PROD)']
+        ],
+    12: ['^(END_US_PROD)', [], [], []]
 }
 
 blnk = ' '
@@ -122,10 +122,12 @@ for line in fileinput.input(inFile):
             new_well = False
             break
         hdrWell_toFile[0] = line[rt.get(1)[1][0]:(rt.get(1)[1][0] + rt.get(1)[3][0])].rstrip() # entityID
+        print(hdrWell_toFile + '\r\n')
     elif new_well:
         match = re.search(pattern=rt.get(2)[0], string=line) # record ++
         if match:
             hdrWell_toFile[1] = line[rt.get(1)[1][0]:(rt.get(1)[1][0] + rt.get(1)[3][0])].rstrip() # prodID
+            print(hdrWell_toFile + '\r\n')
             break
         match = re.search(pattern=rt.get(3)[0], string=line) # record +A
         if match:
@@ -133,7 +135,7 @@ for line in fileinput.input(inFile):
                     (list(wells_per_county.keys())):
                 new_well = False
                 hdrWell_toFile = hdrWell[:]
-                break:
+                break
             hdrWell_toFile[2]  = line[rt.get(3)[1][0]:(rt.get(3)[1][0] + rt.get(3)[3][0])].rstrip() # regionCD
             hdrWell_toFile[3]  = line[rt.get(3)[1][1]:(rt.get(3)[1][1] + rt.get(3)[3][1])].rstrip() # stateCD
             hdrWell_toFile[4]  = line[rt.get(3)[1][2]:(rt.get(3)[1][2] + rt.get(3)[3][2])].rstrip() # fieldCD
@@ -194,7 +196,8 @@ for line in fileinput.input(inFile):
     match = re.search(pattern=rt.get(12)[0], string=line)  # END_US_PROD
     if match:
         ''' do somenthing here '''
-        outfile.write(hdrWell_toFile + '\r\n')
+        print(hdrWell_toFile + '\r\n')
+        outFile.write(hdrWell_toFile + '\r\n')
         new_well = False
         hdrWell_toFile = None
 
