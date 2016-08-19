@@ -55,7 +55,7 @@ rt = {
          'tvDepth', 'wellSerialNR'],
         [15, 3, 9, 5, 10, 10, 2, 1, 1, 5, 1, 5, 8]
         ],
-    8: ['^(\+D\!)', [3, 12, 33, 43, 45, 51, 56],
+    8: ['^(\+D\!)', [3, 12, 24, 33, 45, 51, 56],
         ['surfLat', 'surfLon', 'bhLat', 'bhLon', 'plugDate',
          'upperPerfDepth', 'lowerPerfDepth'],
         [9, 10, 9, 10, 6, 5, 5]
@@ -78,6 +78,7 @@ rt = {
          'numWells', 'daysProd'],
         [8, 15, 15, 15, 15, 5, 2]
         ]
+    12: ['^(END_US_PROD)']
 }
 
 blnk = ' '
@@ -141,14 +142,53 @@ for line in fileinput.input(inFile):
         match = re.search(pattern=rt.get(4)[0], string=line) # record +AR
         if match:
             leaseCD     = line[rt.get(4)[1][0]:(rt.get(4)[1][0] + rt.get(4)[3][0])].rstrip()
-            serialNum   = line[rt.get(4)[1][0]:(rt.get(4)[1][0] + rt.get(4)[3][0])].rstrip()
-            comingCD    = line[rt.get(4)[1][0]:(rt.get(4)[1][0] + rt.get(4)[3][0])].rstrip()
-            resrvrCD    = line[rt.get(4)[1][0]:(rt.get(4)[1][0] + rt.get(4)[3][0])].rstrip()
-            apiCD       = line[rt.get(4)[1][0]:(rt.get(4)[1][0] + rt.get(4)[3][0])].rstrip()
-            districtCD  = line[rt.get(4)[1][0]:(rt.get(4)[1][0] + rt.get(4)[3][0])].rstrip()
+            serialNum   = line[rt.get(4)[1][1]:(rt.get(4)[1][1] + rt.get(4)[3][1])].rstrip()
+            comingCD    = line[rt.get(4)[1][2]:(rt.get(4)[1][2] + rt.get(4)[3][2])].rstrip()
+            resrvrCD    = line[rt.get(4)[1][3]:(rt.get(4)[1][3] + rt.get(4)[3][3])].rstrip()
+            apiCD       = line[rt.get(4)[1][4]:(rt.get(4)[1][4] + rt.get(4)[3][4])].rstrip()
+            districtCD  = line[rt.get(4)[1][5]:(rt.get(4)[1][5] + rt.get(4)[3][5])].rstrip()
             break
+        match = re.search(pattern=rt.get(5)[0], string=line) # record +B
+        if match:
+            leaseNM     = line[rt.get(5)[1][0]:(rt.get(5)[1][0] + rt.get(5)[3][0])].rstrip()
+            operNM      = line[rt.get(5)[1][1]:(rt.get(5)[1][1] + rt.get(5)[3][1])].rstrip()
+            break
+        match = re.search(pattern=rt.get(6)[0], string=line)  # record +C
+        if match:
+            fieldNM     = line[rt.get(6)[1][0]:(rt.get(6)[1][0] + rt.get(6)[3][0])].rstrip()
+            resrvrNM    = line[rt.get(6)[1][1]:(rt.get(6)[1][1] + rt.get(6)[3][1])].rstrip()
+            break
+        match = re.search(pattern=rt.get(7)[0], string=line)  # record +D
+        if match:
+            apiNR       = line[rt.get(7)[1][0]:(rt.get(7)[1][0] + rt.get(7)[3][0])].rstrip()
+            mmsSuffix   = line[rt.get(7)[1][1]:(rt.get(7)[1][1] + rt.get(7)[3][1])].rstrip()
+            wellNR      = line[rt.get(7)[1][2]:(rt.get(7)[1][2] + rt.get(7)[3][2])].rstrip()
+            totalWellDepth = line[rt.get(7)[1][3]:(rt.get(7)[1][3] + rt.get(7)[3][3])].rstrip()
+            bhPress     = line[rt.get(7)[1][4]:(rt.get(7)[1][4] + rt.get(7)[3][4])].rstrip()
+            bhTemp      = line[rt.get(7)[1][5]:(rt.get(7)[1][5] + rt.get(7)[3][5])].rstrip()
+            typeWell    = line[rt.get(7)[1][6]:(rt.get(7)[1][6] + rt.get(7)[3][6])].rstrip()
+            dirDrillFlag = line[rt.get(7)[1][7]:(rt.get(7)[1][7] + rt.get(7)[3][7])].rstrip()
+            wellStat    = line[rt.get(7)[1][8]:(rt.get(7)[1][8] + rt.get(7)[3][8])].rstrip()
+            michiganPermNR = line[rt.get(7)[1][9]:(rt.get(7)[1][9] + rt.get(7)[3][9])].rstrip()
+            bhCalc      = line[rt.get(7)[1][10]:(rt.get(7)[1][10] + rt.get(7)[3][10])].rstrip()
+            tvDepth     = line[rt.get(7)[1][11]:(rt.get(7)[1][11] + rt.get(7)[3][11])].rstrip()
+            wellSerialNR = line[rt.get(7)[1][12]:(rt.get(7)[1][12] + rt.get(7)[3][12])].rstrip()
+            break
+        match = re.search(pattern=rt.get(8)[0], string=line)  # record +D!
+        if match:
+            surfLat     = line[rt.get(8)[1][0]:(rt.get(8)[1][0] + rt.get(8)[3][0])].rstrip()
+            surfLon     = line[rt.get(8)[1][1]:(rt.get(8)[1][1] + rt.get(8)[3][1])].rstrip()
+            bhLat       = line[rt.get(8)[1][2]:(rt.get(8)[1][2] + rt.get(8)[3][2])].rstrip()
+            bhLon       = line[rt.get(8)[1][3]:(rt.get(8)[1][3] + rt.get(8)[3][3])].rstrip()
+            plugDate    = line[rt.get(8)[1][4]:(rt.get(8)[1][4] + rt.get(8)[3][4])].rstrip()
+            upperPerfDepth = line[rt.get(8)[1][5]:(rt.get(8)[1][5] + rt.get(8)[3][5])].rstrip()
+            lowerPerfDepth = line[rt.get(8)[1][6]:(rt.get(8)[1][6] + rt.get(8)[3][6])].rstrip()
+            break
+    match = re.search(pattern=rt.get(12)[0], string=line)  # END_US_PROD
+    if match:
+        ''' do somenthing here '''
 
-
+        new_well = False
 
 fileinput.close()
 
