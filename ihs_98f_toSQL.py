@@ -121,12 +121,10 @@ for line in fileinput.input(inFile):
             new_well = False
             continue
         hdrWell_toFile[0] = line[rt.get(1)[1][0]:(rt.get(1)[1][0] + rt.get(1)[3][0])].rstrip() # entityID
-        #print(str(hdrWell_toFile) + '\r\n')
     elif new_well:
         match = re.search(pattern=rt.get(2)[0], string=line) # record ++
         if match:
-            hdrWell_toFile[1] = line[rt.get(1)[1][0]:(rt.get(1)[1][0] + rt.get(1)[3][0])].rstrip() # prodID
-            #print(str(hdrWell_toFile) + '\r\n')
+            hdrWell_toFile[1] = line[rt.get(2)[1][0]:(rt.get(2)[1][0] + rt.get(2)[3][0])].rstrip() # prodID
             continue
         match = re.search(pattern=rt.get(3)[0], string=line) # record +A
         if match:
@@ -191,14 +189,13 @@ for line in fileinput.input(inFile):
             hdrWell_toFile[41] = line[rt.get(8)[1][4]:(rt.get(8)[1][4] + rt.get(8)[3][4])].rstrip() # plugDate
             hdrWell_toFile[42] = line[rt.get(8)[1][5]:(rt.get(8)[1][5] + rt.get(8)[3][5])].rstrip() # upperPerfDepth
             hdrWell_toFile[43] = line[rt.get(8)[1][6]:(rt.get(8)[1][6] + rt.get(8)[3][6])].rstrip() # lowerPerfDepth
-            #print(str(hdrWell_toFile))
             continue
     match = re.search(pattern=rt.get(12)[0], string=line)  # END_US_PROD
     if match:
-        ''' do somenthing here '''
-        #print(str(hdrWell_toFile) + '\r\n')
-        outFile.write(str(hdrWell_toFile) + '\r\n')
-        print('Well in : [{0}]'.format(hdrWell_toFile[6]))
+        ''' do something here '''
+        if new_well:
+            outFile.write(str(hdrWell_toFile) + '\r\n')
+            print('Well in : [{0}]'.format(hdrWell_toFile[6]), end='\r')
         new_well = False
         hdrWell_toFile = hdrWell[:]
 
