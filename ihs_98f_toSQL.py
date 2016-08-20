@@ -1,7 +1,8 @@
 import sys, re, time, fileinput
 
 folder = '/home/drome/darioromero/ihs_98f'
-inFile = 'PERMIAN_BASIN_298_Production.98f'
+#inFile = 'PERMIAN_BASIN_298_Production.98f'
+inFile = 'PERMIAN_BASIN_298_Production_TEST.98f'
 inFile = folder + '/' + inFile
 
 # regex pattern for searching for specific counties as listed below
@@ -98,11 +99,11 @@ hdrWell = [40*blnk, 40*blnk, 2*blnk, 2*blnk, 6*blnk, 3*blnk, 8*blnk, 8*blnk, 1*b
            40*blnk, 20*blnk, 15*blnk, 3*blnk, 9*blnk, 5*blnk, 10*blnk, 10*blnk, 2*blnk, 1*blnk, 1*blnk,
            5*blnk, 1*blnk, 5*blnk, 8*blnk, 9*blnk, 10*blnk, 9*blnk, 10*blnk, 6*blnk, 5*blnk, 5*blnk]
 
-# 'testNR', 'uprPerfDepth', 'lwrPerfDepth', 'liqPerDay', 'gasPerDay', 'watPerDay', 'chokeSize', 'basicSedWat',
-# 'ftPress', 'goRatio', 'liqGravity', 'finalSIPress', 'gasGravity', 'prodMethod', 'testDate'
+# 'prodID', 'testNR', 'uprPerfDepth', 'lwrPerfDepth', 'liqPerDay', 'gasPerDay', 'watPerDay', 'chokeSize',
+# 'basicSedWat', 'ftPress', 'goRatio', 'liqGravity', 'finalSIPress', 'gasGravity', 'prodMethod', 'testDate'
 # 'testNR', 'bhp_Z', 'zFactor', 'nFactor', 'aopCalc', 'cumGas', 'clPressure'
 
-tstWell = [3*blnk, 5*blnk, 5*blnk, 7*blnk, 6*blnk, 5*blnk, 5*blnk, 4*blnk, 5*blnk, 7*blnk,
+tstWell = [40*blnk, 3*blnk, 5*blnk, 5*blnk, 7*blnk, 6*blnk, 5*blnk, 5*blnk, 4*blnk, 5*blnk, 7*blnk,
            4*blnk, 5*blnk, 5*blnk, 2*blnk, 8*blnk, 3*blnk, 4*blnk, 5*blnk, 6*blnk, 7*blnk, 15*blnk, 5*blnk]
 
 # 'prodID', 'prodDate', 'liqProd', 'gasProd', 'watProd', 'allowProd', 'numWells', 'daysProd'
@@ -110,15 +111,20 @@ tstWell = [3*blnk, 5*blnk, 5*blnk, 7*blnk, 6*blnk, 5*blnk, 5*blnk, 4*blnk, 5*bln
 prdWell = [40*blnk, 8*blnk, 15*blnk, 15*blnk, 15*blnk, 15*blnk, 5*blnk, 2*blnk]
 
 outFile_hdr = open('workfile_hdr.csv', 'w')
+outFile_hdr.write('entityID, prodID, regionCD, stateCD, fieldCD, countyCD, countyNM, operCD, productCD, modeCD, \
+                   formationCD, basinCD, indCBM, enhrecFlg, leaseCD, serialNum, comingCD, resrvrCD, apiCD, \
+                   districtCD, leaseNM, operNM, fieldNM, resrvrNM, apiNR, mmsSuffix, wellNR, totalWellDepth, \
+                   bhPress, bhTemp, typeWell, dirDrillFlag, wellStat, michiganPermNR, bhCalc, tvDepth, \
+                   wellSerialNR, surfLat, surfLon, bhLat, bhLon, plugDate, upperPerfDepth, lowerPerfDepth\r\n')
 outFile_prd = open('workfile_prd.csv', 'w')
-#outFile_tst = open('workfile_tst.csv', 'w')
+outFile_prd.write('prodID, prodDate, liqProd, gasProd, watProd, allowProd, numWells, daysProd\r\n')
+outFile_tst = open('workfile_tst.csv', 'w')
 
 for line in fileinput.input(inFile):
     match = re.search(pattern=rt.get(1)[0], string=line) # START_US_PROD
     if match:
         new_well = True
         hdrWell_toFile = hdrWell[:]
-        prdWell_toFile = prdWell[:]
         match = re.search(pattern='MULTI', string=line)
         if match:
             new_well = False
@@ -127,6 +133,7 @@ for line in fileinput.input(inFile):
     elif new_well:
         match = re.search(pattern=rt.get(2)[0], string=line) # record ++
         if match:
+            # need to substitute spaces in underscores
             hdrWell_toFile[1] = line[rt.get(2)[1][0]:(rt.get(2)[1][0] + rt.get(2)[3][0])].rstrip() # prodID
             continue
         match = re.search(pattern=rt.get(3)[0], string=line) # record +A
@@ -136,37 +143,59 @@ for line in fileinput.input(inFile):
                 new_well = False
                 hdrWell_toFile = hdrWell[:]
                 continue
-            hdrWell_toFile[2]  = line[rt.get(3)[1][0]:(rt.get(3)[1][0] + rt.get(3)[3][0])].rstrip() # regionCD
-            hdrWell_toFile[3]  = line[rt.get(3)[1][1]:(rt.get(3)[1][1] + rt.get(3)[3][1])].rstrip() # stateCD
-            hdrWell_toFile[4]  = line[rt.get(3)[1][2]:(rt.get(3)[1][2] + rt.get(3)[3][2])].rstrip() # fieldCD
-            hdrWell_toFile[5]  = line[rt.get(3)[1][3]:(rt.get(3)[1][3] + rt.get(3)[3][3])].rstrip() # countyCD
-            hdrWell_toFile[6]  = line[rt.get(3)[1][4]:(rt.get(3)[1][4] + rt.get(3)[3][4])].rstrip() # countyNM
-            hdrWell_toFile[7]  = line[rt.get(3)[1][5]:(rt.get(3)[1][5] + rt.get(3)[3][5])].rstrip() # operCD
-            hdrWell_toFile[8]  = line[rt.get(3)[1][6]:(rt.get(3)[1][6] + rt.get(3)[3][6])].rstrip() # productCD
-            hdrWell_toFile[9]  = line[rt.get(3)[1][7]:(rt.get(3)[1][7] + rt.get(3)[3][7])].rstrip() # modeCD
-            hdrWell_toFile[10] = line[rt.get(3)[1][8]:(rt.get(3)[1][8] + rt.get(3)[3][8])].rstrip() # formationCD
-            hdrWell_toFile[11] = line[rt.get(3)[1][9]:(rt.get(3)[1][9] + rt.get(3)[3][9])].rstrip() # basinCD
-            hdrWell_toFile[12] = line[rt.get(3)[1][10]:(rt.get(3)[1][10] + rt.get(3)[3][10])].rstrip() # indCBM
-            hdrWell_toFile[13] = line[rt.get(3)[1][11]:(rt.get(3)[1][11] + rt.get(3)[3][11])].rstrip() # enhrecFlg
+            # regionCD
+            hdrWell_toFile[2]  = line[rt.get(3)[1][0]:(rt.get(3)[1][0] + rt.get(3)[3][0])].rstrip()
+            # stateCD
+            hdrWell_toFile[3]  = line[rt.get(3)[1][1]:(rt.get(3)[1][1] + rt.get(3)[3][1])].rstrip()
+            # fieldCD
+            hdrWell_toFile[4]  = line[rt.get(3)[1][2]:(rt.get(3)[1][2] + rt.get(3)[3][2])].rstrip()
+            # countyCD
+            hdrWell_toFile[5]  = line[rt.get(3)[1][3]:(rt.get(3)[1][3] + rt.get(3)[3][3])].rstrip()
+            # countyNM
+            hdrWell_toFile[6]  = line[rt.get(3)[1][4]:(rt.get(3)[1][4] + rt.get(3)[3][4])].rstrip()
+            # operCD
+            hdrWell_toFile[7]  = line[rt.get(3)[1][5]:(rt.get(3)[1][5] + rt.get(3)[3][5])].rstrip()
+            # productCD
+            hdrWell_toFile[8]  = line[rt.get(3)[1][6]:(rt.get(3)[1][6] + rt.get(3)[3][6])].rstrip()
+            # modeCD
+            hdrWell_toFile[9]  = line[rt.get(3)[1][7]:(rt.get(3)[1][7] + rt.get(3)[3][7])].rstrip()
+            # formationCD
+            hdrWell_toFile[10] = line[rt.get(3)[1][8]:(rt.get(3)[1][8] + rt.get(3)[3][8])].rstrip()
+            # basinCD
+            hdrWell_toFile[11] = line[rt.get(3)[1][9]:(rt.get(3)[1][9] + rt.get(3)[3][9])].rstrip()
+            # indCBM
+            hdrWell_toFile[12] = line[rt.get(3)[1][10]:(rt.get(3)[1][10] + rt.get(3)[3][10])].rstrip()
+            # enhrecFlg
+            hdrWell_toFile[13] = line[rt.get(3)[1][11]:(rt.get(3)[1][11] + rt.get(3)[3][11])].rstrip()
             continue
         match = re.search(pattern=rt.get(4)[0], string=line) # record +AR
         if match:
-            hdrWell_toFile[14] = line[rt.get(4)[1][0]:(rt.get(4)[1][0] + rt.get(4)[3][0])].rstrip() # leaseCD
-            hdrWell_toFile[15] = line[rt.get(4)[1][1]:(rt.get(4)[1][1] + rt.get(4)[3][1])].rstrip() # serialNum
-            hdrWell_toFile[16] = line[rt.get(4)[1][2]:(rt.get(4)[1][2] + rt.get(4)[3][2])].rstrip() # comingCD
-            hdrWell_toFile[17] = line[rt.get(4)[1][3]:(rt.get(4)[1][3] + rt.get(4)[3][3])].rstrip() # resrvrCD
-            hdrWell_toFile[18] = line[rt.get(4)[1][4]:(rt.get(4)[1][4] + rt.get(4)[3][4])].rstrip() # apiCD
-            hdrWell_toFile[19] = line[rt.get(4)[1][5]:(rt.get(4)[1][5] + rt.get(4)[3][5])].rstrip() # districtCD
+            # leaseCD
+            hdrWell_toFile[14] = line[rt.get(4)[1][0]:(rt.get(4)[1][0] + rt.get(4)[3][0])].rstrip()
+            # serialNum
+            hdrWell_toFile[15] = line[rt.get(4)[1][1]:(rt.get(4)[1][1] + rt.get(4)[3][1])].rstrip()
+            # comingCD
+            hdrWell_toFile[16] = line[rt.get(4)[1][2]:(rt.get(4)[1][2] + rt.get(4)[3][2])].rstrip()
+            # resrvrCD
+            hdrWell_toFile[17] = line[rt.get(4)[1][3]:(rt.get(4)[1][3] + rt.get(4)[3][3])].rstrip()
+            # apiCD
+            hdrWell_toFile[18] = line[rt.get(4)[1][4]:(rt.get(4)[1][4] + rt.get(4)[3][4])].rstrip()
+            # districtCD
+            hdrWell_toFile[19] = line[rt.get(4)[1][5]:(rt.get(4)[1][5] + rt.get(4)[3][5])].rstrip()
             continue
         match = re.search(pattern=rt.get(5)[0], string=line) # record +B
         if match:
-            hdrWell_toFile[20] = line[rt.get(5)[1][0]:(rt.get(5)[1][0] + rt.get(5)[3][0])].rstrip() # leaseNM
-            hdrWell_toFile[21] = line[rt.get(5)[1][1]:(rt.get(5)[1][1] + rt.get(5)[3][1])].rstrip() # operNM
+            # leaseNM
+            hdrWell_toFile[20] = line[rt.get(5)[1][0]:(rt.get(5)[1][0] + rt.get(5)[3][0])].rstrip()
+            # operNM
+            hdrWell_toFile[21] = line[rt.get(5)[1][1]:(rt.get(5)[1][1] + rt.get(5)[3][1])].rstrip()
             continue
         match = re.search(pattern=rt.get(6)[0], string=line)  # record +C
         if match:
-            hdrWell_toFile[22] = line[rt.get(6)[1][0]:(rt.get(6)[1][0] + rt.get(6)[3][0])].rstrip() # fieldNM
-            hdrWell_toFile[23] = line[rt.get(6)[1][1]:(rt.get(6)[1][1] + rt.get(6)[3][1])].rstrip() # resrvrNM
+            # fieldNM
+            hdrWell_toFile[22] = line[rt.get(6)[1][0]:(rt.get(6)[1][0] + rt.get(6)[3][0])].rstrip()
+            # resrvrNM
+            hdrWell_toFile[23] = line[rt.get(6)[1][1]:(rt.get(6)[1][1] + rt.get(6)[3][1])].rstrip()
             continue
         match = re.search(pattern=rt.get(7)[0], string=line)  # record +D
         if match:
@@ -200,13 +229,13 @@ for line in fileinput.input(inFile):
         match = re.search(pattern=rt.get(8)[0], string=line)  # record +D!
         if match:
             # surfLat
-            hdrWell_toFile[37] = line[rt.get(8)[1][0]:(rt.get(8)[1][0] + rt.get(8)[3][0])].rstrip(' ').lstrip(' ')
+            hdrWell_toFile[37] = line[rt.get(8)[1][0]:(rt.get(8)[1][0] + rt.get(8)[3][0])].rstrip()
             # surfLon
-            hdrWell_toFile[38] = line[rt.get(8)[1][1]:(rt.get(8)[1][1] + rt.get(8)[3][1])].rstrip(' ').lstrip(' ')
+            hdrWell_toFile[38] = line[rt.get(8)[1][1]:(rt.get(8)[1][1] + rt.get(8)[3][1])].rstrip()
             # bhLat
-            hdrWell_toFile[39] = line[rt.get(8)[1][2]:(rt.get(8)[1][2] + rt.get(8)[3][2])].rstrip(' ').lstrip(' ')
+            hdrWell_toFile[39] = line[rt.get(8)[1][2]:(rt.get(8)[1][2] + rt.get(8)[3][2])].rstrip()
             # bhLon
-            hdrWell_toFile[40] = line[rt.get(8)[1][3]:(rt.get(8)[1][3] + rt.get(8)[3][3])].rstrip().lstrip(' ')
+            hdrWell_toFile[40] = line[rt.get(8)[1][3]:(rt.get(8)[1][3] + rt.get(8)[3][3])].rstrip()
             # plugDate
             hdrWell_toFile[41] = line[rt.get(8)[1][4]:(rt.get(8)[1][4] + rt.get(8)[3][4])].rstrip()
             # upperPerfDepth
@@ -216,29 +245,31 @@ for line in fileinput.input(inFile):
             continue
         match = re.search(pattern=rt.get(11)[0], string=line)  # record +G
         if match:
-            # prodID
-            prdWell_toFile[0] = line[rt.get(11)[1][0]:(rt.get(11)[1][0] + rt.get(11)[3][0])].rstrip(' ').lstrip(' ')
-            # prodDate
-            prdWell_toFile[1] = line[rt.get(11)[1][1]:(rt.get(11)[1][1] + rt.get(11)[3][1])].rstrip(' ').lstrip(' ')
-            # liqProd
-            prdWell_toFile[2] = line[rt.get(11)[1][2]:(rt.get(11)[1][2] + rt.get(11)[3][2])].rstrip(' ').lstrip(' ')
-            # gasProd
-            prdWell_toFile[3] = line[rt.get(11)[1][3]:(rt.get(11)[1][3] + rt.get(11)[3][3])].rstrip(' ').lstrip(' ')
-            # watProd
-            prdWell_toFile[4] = line[rt.get(11)[1][4]:(rt.get(11)[1][4] + rt.get(11)[3][4])].rstrip(' ').lstrip(' ')
-            # allowProd
-            prdWell_toFile[5] = line[rt.get(11)[1][5]:(rt.get(11)[1][5] + rt.get(11)[3][5])].rstrip(' ').lstrip(' ')
-            # numWells
-            prdWell_toFile[6] = line[rt.get(11)[1][6]:(rt.get(11)[1][6] + rt.get(11)[3][6])].rstrip(' ').lstrip(' ')
-            # daysProd
-            prdWell_toFile[7] = line[rt.get(11)[1][7]:(rt.get(11)[1][7] + rt.get(11)[3][7])].rstrip(' ').lstrip(' ')
-            outFile_prd.write(','.join(prdWell_toFile).rstrip(' ').lstrip(' ') + '\r\n')
             prdWell_toFile = prdWell[:]
+            # prodID
+            prdWell_toFile[0] = hdrWell_toFile[1]
+            # prodDate
+            prdWell_toFile[1] = line[rt.get(11)[1][0]:(rt.get(11)[1][0] + rt.get(11)[3][0])].rstrip()
+            # liqProd
+            prdWell_toFile[2] = line[rt.get(11)[1][1]:(rt.get(11)[1][1] + rt.get(11)[3][1])].rstrip()
+            # gasProd
+            prdWell_toFile[3] = line[rt.get(11)[1][2]:(rt.get(11)[1][2] + rt.get(11)[3][2])].rstrip()
+            # watProd
+            prdWell_toFile[4] = line[rt.get(11)[1][3]:(rt.get(11)[1][3] + rt.get(11)[3][3])].rstrip()
+            # allowProd
+            prdWell_toFile[5] = line[rt.get(11)[1][4]:(rt.get(11)[1][4] + rt.get(11)[3][4])].rstrip()
+            # numWells
+            prdWell_toFile[6] = line[rt.get(11)[1][5]:(rt.get(11)[1][5] + rt.get(11)[3][5])].rstrip()
+            # daysProd
+            prdWell_toFile[7] = line[rt.get(11)[1][6]:(rt.get(11)[1][6] + rt.get(11)[3][6])].rstrip()
+            outFile_prd.write(','.join(prdWell_toFile).rstrip() + '\r\n')
+            prdWell_toFile = prdWell[:]
+            continue
     match = re.search(pattern=rt.get(12)[0], string=line)  # END_US_PROD
     if match:
         if new_well:
-            outFile_hdr.write(','.join(hdrWell_toFile).rstrip(' ').lstrip(' ') + '\r\n')
-            print('      Well in : [{0:' '>8}]'.format(hdrWell_toFile[6]), end='\r')
+            outFile_hdr.write(','.join(hdrWell_toFile) + '\r\n')
+            print('      Well in : [{0:' '>8}]'.format(hdrWell_toFile[6]))
         new_well = False
         hdrWell_toFile = hdrWell[:]
 
