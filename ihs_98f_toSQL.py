@@ -364,7 +364,7 @@ for line in fileinput.input(inFile):
             new_well = False
             hdrWell_toFile = hdrWell[:]
             # next print command only works when code is executed on terminal console
-            # print('             {0:}'.format(wells_per_county), end='\r')
+            print('             {0:}'.format(wells_per_county), end='\r')
             continue
 print()
 print('--------------')
