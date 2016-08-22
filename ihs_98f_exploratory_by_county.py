@@ -1,6 +1,6 @@
 import sys, re, time, fileinput
 
-folder = '/home/drome/darioromero/ihs_98f'
+folder = '/media/drome/DATLNX/ihs_98f'
 inFile = 'PERMIAN_BASIN_298_Production.98f'
 
 inFile = folder + '/' + inFile
